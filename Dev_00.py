@@ -64,7 +64,7 @@ test_labels_one_hot = to_categorical(test_labels)
 input_shape = (32,32,3)
 model = createModel()
 batch_size = 256
-epochs = 10
+epochs = 5
 model.compile(optimizer='rmsprop', loss='categorical_crossentropy', metrics=['accuracy'])
 
 history = model.fit(train_data, train_labels_one_hot, batch_size=batch_size, epochs=epochs, verbose=1,
