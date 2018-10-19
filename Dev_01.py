@@ -24,8 +24,8 @@ import numpy as np
 def imshow(img):
     img = img * 0.5 + 0.5
     npimg = img.numpy()
-    plt.imshow(np.transpose(npimg, (1,2,0)))
-    plt.show()
+    #plt.imshow(np.transpose(npimg, (1,2,0)))
+    #plt.show()
 
 
 dataiter = iter(trainloader)
@@ -71,6 +71,7 @@ for epoch in range(2):
     t1 = time.time()
     running_loss = 0.0
     for i, data in enumerate(trainloader, 0):
+        t2 = time.time()
         inputs, labels = data
 
         optimizer.zero_grad()
@@ -82,8 +83,8 @@ for epoch in range(2):
 
         running_loss += loss.item()
         if i % 2000 == 1999:
-            t2 = time.time()
-            print('Total time: %.2f \t Epoch time: %.2f \t b' % (t2-t0, t2-t1))
+            t3 = time.time()
+            print('Total time: %.2f \t Epoch time: %.2f \t Batch time: %.2f' % (t3-t0, t3-t1, t3-t2))
             print('[%d, %5d] loss:%.3f' % (epoch+1, i+1, running_loss / 2000))
             running_loss = 0.0
 
