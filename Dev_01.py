@@ -2,6 +2,10 @@ import torch
 import torchvision
 import torchvision.transforms as transforms
 
+device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
+print(device)
+
+
 
 transform = transforms.Compose([transforms.ToTensor(),
                                 transforms.Normalize((0.5,0.5,0.5), (0.5,0.5,0.5))])
@@ -24,8 +28,8 @@ import numpy as np
 def imshow(img):
     img = img * 0.5 + 0.5
     npimg = img.numpy()
-    plt.imshow(np.transpose(npimg, (1,2,0)))
-    plt.show()
+    #plt.imshow(np.transpose(npimg, (1,2,0)))
+    #plt.show()
 
 
 dataiter = iter(trainloader)
@@ -37,6 +41,7 @@ print(' '.join('%5s' % classes[labels[j]] for j in range(4)))
 
 import torch.nn as nn
 import torch.nn.functional as F
+from torch.utils.data import Dataset, DataLoader
 
 
 class Net(nn.Module):
@@ -59,6 +64,7 @@ class Net(nn.Module):
         return x
 
 net = Net()
+net.to(device)
 
 import torch.optim as optim
 import time
@@ -71,7 +77,9 @@ for epoch in range(2):
     t1 = time.time()
     running_loss = 0.0
     for i, data in enumerate(trainloader, 0):
+        t2 = time.time()
         inputs, labels = data
+        inputs, labels = inputs.to(device), labels.to(device)
 
         optimizer.zero_grad()
 
@@ -82,11 +90,12 @@ for epoch in range(2):
 
         running_loss += loss.item()
         if i % 2000 == 1999:
-            t2 = time.time()
-            print('Total time: %.2f \t Epoch time: %.2f \t b' % (t2-t0, t2-t1))
+            t3 = time.time()
+            print('Total time: %.2f \t Epoch time: %.2f \t Batch time: %.2f' % (t3-t0, t3-t1, t3-t2))
             print('[%d, %5d] loss:%.3f' % (epoch+1, i+1, running_loss / 2000))
             running_loss = 0.0
 
+net = net.cpu()
 print('Finished Training')
 
 dataiter = iter(testloader)
